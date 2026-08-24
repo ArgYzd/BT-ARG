@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { createRoot } from "react-dom/client";
 import "./styles.css";
 
@@ -43,6 +43,15 @@ function App() {
     setNotice(`Reserva confirmada — ${court.name}, ${date} às ${time}.`);
   };
 
+  useEffect(() => {
+    const closeOnEscape = (event) => {
+      if (event.key === "Escape") setModal(false);
+    };
+
+    window.addEventListener("keydown", closeOnEscape);
+    return () => window.removeEventListener("keydown", closeOnEscape);
+  }, []);
+
   const selectNavigation = (item) => {
     setActive(item);
     if (item === "Reservar") {
@@ -62,6 +71,7 @@ function App() {
           {["Reservar", "As minhas reservas", "Ranking"].map((item) => (
             <button
               key={item}
+              type="button"
               className={active === item ? "nav-active" : ""}
               onClick={() => selectNavigation(item)}
             >
@@ -86,6 +96,7 @@ function App() {
           </p>
           <button
             className="primary"
+            type="button"
             onClick={() =>
               document
                 .querySelector("#booking")
@@ -110,14 +121,15 @@ function App() {
             <p className="eyebrow">RESERVA RÁPIDA</p>
             <h2>Escolhe o teu court.</h2>
           </div>
-          <button className="date-button">
+          <div className="date-button" aria-live="polite">
             ‹ <strong>{date}</strong> ›
-          </button>
+          </div>
         </div>
         <div className="dates" aria-label="Escolher data">
           {dates.map((day) => (
             <button
               key={day.value}
+              type="button"
               onClick={() => setDate(day.value)}
               className={date === day.value ? "selected-date" : ""}
               aria-pressed={date === day.value}
@@ -132,6 +144,7 @@ function App() {
             <button
               className={`court-card ${court.id === c.id ? "selected-card" : ""}`}
               key={c.id}
+              type="button"
               onClick={() => setCourt(c)}
               aria-pressed={court.id === c.id}
             >
@@ -157,6 +170,7 @@ function App() {
             {slots.map((slot) => (
               <button
                 key={slot}
+                type="button"
                 disabled={slot === "11:00" || slot === "16:00"}
                 onClick={() => setTime(slot)}
                 className={time === slot ? "selected-slot" : ""}
@@ -178,7 +192,11 @@ function App() {
             €{total}
             <small> total</small>
           </div>
-          <button className="primary" onClick={() => setModal(true)}>
+          <button
+            className="primary"
+            type="button"
+            onClick={() => setModal(true)}
+          >
             Continuar <span>→</span>
           </button>
         </div>
@@ -230,16 +248,20 @@ function App() {
             className="modal"
             onClick={(e) => e.stopPropagation()}
             onSubmit={reserve}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="confirmation-title"
           >
             <button
               className="close"
+              type="button"
               onClick={() => setModal(false)}
               aria-label="Fechar"
             >
               ×
             </button>
             <p className="eyebrow">QUASE LÁ</p>
-            <h2>Confirma a reserva</h2>
+            <h2 id="confirmation-title">Confirma a reserva</h2>
             <p className="modal-copy">
               {court.name}
               <br />
