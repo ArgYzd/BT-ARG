@@ -1,0 +1,17 @@
+{
+  "name": "bt-arg",
+  "private": true,
+  "version": "0.1.0",
+  "description": "BT ARG beach tennis court booking platform",
+  "packageManager": "pnpm@10.15.0",
+  "scripts": {
+    "dev": "pnpm --filter @bt-arg/web dev",
+    "build": "pnpm -r build",
+    "lint": "pnpm -r lint",
+    "test": "pnpm -r test",
+    "typecheck": "pnpm -r typecheck"
+  },
+  "devDependencies": {
+    "typescript": "^5.8.3"
+  }
+}
