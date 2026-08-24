@@ -1,0 +1,4 @@
+CREATE TABLE IF NOT EXISTS users (id TEXT PRIMARY KEY, telegram_id TEXT UNIQUE, name TEXT NOT NULL, phone TEXT, role TEXT NOT NULL DEFAULT 'user', created_at TEXT NOT NULL);
+CREATE TABLE IF NOT EXISTS courts (id TEXT PRIMARY KEY, name TEXT NOT NULL, active INTEGER NOT NULL DEFAULT 1);
+CREATE TABLE IF NOT EXISTS bookings (id TEXT PRIMARY KEY, user_id TEXT NOT NULL, court_id TEXT NOT NULL, date TEXT NOT NULL, start_time TEXT NOT NULL, end_time TEXT NOT NULL, status TEXT NOT NULL DEFAULT 'confirmed', created_at TEXT NOT NULL, FOREIGN KEY(user_id) REFERENCES users(id), FOREIGN KEY(court_id) REFERENCES courts(id));
+CREATE UNIQUE INDEX IF NOT EXISTS idx_booking_slot ON bookings(court_id,date,start_time) WHERE status='confirmed';
